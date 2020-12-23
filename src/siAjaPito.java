@@ -51,32 +51,38 @@ public class siAjaPito {
 
         // Realizar operaciones
         while (!cola.isEmpty()) {
-            if ((char) cola.peek() == '+') {
-                cola.poll();
-                num2 = (double) pila2.pop();
-                num1 = (double) pila2.pop();
-                result = (num1) + (num2);
-                pila2.push(result);
-            } else if ((char) cola.peek() == '-') {
-                cola.poll();
-                num2 = (double) pila2.pop();
-                num1 = (double) pila2.pop();
-                result = (num1) - (num2);
-                pila2.push(result);
-            } else if ((char) cola.peek() == '/') {
-                cola.poll();
-                num2 = (double) pila2.pop();
-                num1 = (double) pila2.pop();
-                result = (num1) / (num2);
-                pila2.push(result);
-            } else if ((char) cola.peek() == '*') {
-                cola.poll();
-                num2 = (double) pila2.pop();
-                num1 = (double) pila2.pop();
-                result = (num1) * (num2);
-                pila2.push(result);
-            } else {
-                pila2.push(cola.poll());
+            switch ((char) cola.peek()) {
+                case '+':
+                    cola.poll();
+                    num2 = (double) pila2.pop();
+                    num1 = (double) pila2.pop();
+                    result = (num1) + (num2);
+                    pila2.push(result);
+                    break;
+                case '-':
+                    cola.poll();
+                    num2 = (double) pila2.pop();
+                    num1 = (double) pila2.pop();
+                    result = (num1) - (num2);
+                    pila2.push(result);
+                    break;
+                case '/':
+                    cola.poll();
+                    num2 = (double) pila2.pop();
+                    num1 = (double) pila2.pop();
+                    result = (num1) / (num2);
+                    pila2.push(result);
+                    break;
+                case '*':
+                    cola.poll();
+                    num2 = (double) pila2.pop();
+                    num1 = (double) pila2.pop();
+                    result = (num1) * (num2);
+                    pila2.push(result);
+                    break;
+                default:
+                    pila2.push(cola.poll());
+                    break;
             }
         }
         /*if ((char)pila2.peek() >= '*' && (char)pila2.peek() <= '/') {
@@ -86,8 +92,8 @@ public class siAjaPito {
                 result = (num1) + ((double)operador) + (num2);
                 pila2.push(result);
             }*/
-        while (!pila2.isEmpty()) {
-            System.out.print(pila2.pop());
+        while (!cola.isEmpty()) {
+            System.out.print(cola.pop());
         }
 
         System.out.println("");
