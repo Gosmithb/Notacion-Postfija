@@ -1,5 +1,6 @@
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Stack;
@@ -15,88 +16,90 @@ import java.util.Stack;
  */
 public class siAjaPito {
 
-    public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    public static BufferedReader kb = new BufferedReader(new InputStreamReader(System.in));
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        Stack pila1 = new Stack();
-        Stack pila2 = new Stack();
+        Stack pila = new Stack();
         LinkedList cola = new LinkedList();
-        String infija = "5+5*3/2-2";
-        String salida = "";
-        char operador;
-        double num1, num2, result;
+        String infija;
+        String salida;
+        
+        System.out.println("Ingrese operaciones sin parentesis:");
+        infija = kb.readLine();
+        
+        // Notacion infija a postfija
+        cola = notacionInfijaAPostFija(infija, cola, pila);  
 
-        // Notacion infija a Notacion Postfija
+        // Realizar Operaciones Correspondientes
+        salida = Operaciones(cola, pila);
+
+        System.out.println(salida);
+        System.out.println("");
+
+    }
+
+    private static LinkedList notacionInfijaAPostFija(String infija, LinkedList cola, Stack pila) {
         for (int i = 0; i < infija.length(); i++) {
             if ((infija.charAt(i) >= '0') && (infija.charAt(i) <= '9')) {
                 cola.offer(infija.charAt(i));
             } else if ((infija.charAt(i) >= '*') && (infija.charAt(i) <= '/')) {
-                if (pila1.isEmpty()) {
-                    pila1.push(infija.charAt(i));
-                } else if (((infija.charAt(i) == '+') || (infija.charAt(i) == '-')) && (((char) pila1.peek() == '/') || ((char) pila1.peek() == '*'))) {
-                    while (!pila1.isEmpty()) {
-                        cola.offer(pila1.pop());
+                if (pila.isEmpty()) {
+                    pila.push(infija.charAt(i));
+                } else if (((infija.charAt(i) == '+') || (infija.charAt(i) == '-')) && (((char) pila.peek() == '/') || ((char) pila.peek() == '*'))) {
+                    while (!pila.isEmpty()) {
+                        cola.offer(pila.pop());
                     }
-                    pila1.push(infija.charAt(i));
-                } else if (((infija.charAt(i) == '/') || (infija.charAt(i) == '*')) && (((char) pila1.peek() == '+') || ((char) pila1.peek() == '-'))) {
-                    pila1.push(infija.charAt(i));
-                } else if ((((infija.charAt(i) == '/') || (infija.charAt(i) == '*')) && (((char) pila1.peek() == '/') || ((char) pila1.peek() == '*'))) || (((infija.charAt(i) == '+') || (infija.charAt(i) == '-')) && (((char) pila1.peek() == '+') || ((char) pila1.peek() == '-')))) {
-                    cola.offer(pila1.pop());
-                    pila1.push(infija.charAt(i));
+                    pila.push(infija.charAt(i));
+                } else if (((infija.charAt(i) == '/') || (infija.charAt(i) == '*')) && (((char) pila.peek() == '+') || ((char) pila.peek() == '-'))) {
+                    pila.push(infija.charAt(i));
+                } else if ((((infija.charAt(i) == '/') || (infija.charAt(i) == '*')) && (((char) pila.peek() == '/') || ((char) pila.peek() == '*'))) || (((infija.charAt(i) == '+') || (infija.charAt(i) == '-')) && (((char) pila.peek() == '+') || ((char) pila.peek() == '-')))) {
+                    cola.offer(pila.pop());
+                    pila.push(infija.charAt(i));
                 }
             }
         }
-        cola.offer(pila1.pop());
+        cola.offer(pila.pop());
+        return cola;
+    }
 
-        // Realizar operaciones
+    private static String Operaciones(LinkedList cola, Stack pila) {
+        double num1, num2, result;
         while (!cola.isEmpty()) {
             switch ((char) cola.peek()) {
                 case '+':
                     cola.poll();
-                    num2 = (double) pila2.pop();
-                    num1 = (double) pila2.pop();
+                    num2 = Double.parseDouble(pila.pop().toString());
+                    num1 = Double.parseDouble(pila.pop().toString());
                     result = (num1) + (num2);
-                    pila2.push(result);
+                    pila.push(result);
                     break;
                 case '-':
                     cola.poll();
-                    num2 = (double) pila2.pop();
-                    num1 = (double) pila2.pop();
+                    num2 = Double.parseDouble(pila.pop().toString());
+                    num1 = Double.parseDouble(pila.pop().toString());
                     result = (num1) - (num2);
-                    pila2.push(result);
+                    pila.push(result);
                     break;
                 case '/':
                     cola.poll();
-                    num2 = (double) pila2.pop();
-                    num1 = (double) pila2.pop();
+                    num2 = Double.parseDouble(pila.pop().toString());
+                    num1 = Double.parseDouble(pila.pop().toString());
                     result = (num1) / (num2);
-                    pila2.push(result);
+                    pila.push(result);
                     break;
                 case '*':
                     cola.poll();
-                    num2 = (double) pila2.pop();
-                    num1 = (double) pila2.pop();
+                    num2 = Double.parseDouble(pila.pop().toString());
+                    num1 = Double.parseDouble(pila.pop().toString());
                     result = (num1) * (num2);
-                    pila2.push(result);
+                    pila.push(result);
                     break;
                 default:
-                    pila2.push(cola.poll());
+                    pila.push(cola.poll());
                     break;
             }
         }
-        /*if ((char)pila2.peek() >= '*' && (char)pila2.peek() <= '/') {
-                operador = (char)pila2.pop();
-                num2 = (double)pila2.pop();
-                num1 = (double)pila2.pop();
-                result = (num1) + ((double)operador) + (num2);
-                pila2.push(result);
-            }*/
-        while (!cola.isEmpty()) {
-            System.out.print(cola.pop());
-        }
-
-        System.out.println("");
-
+        return pila.pop().toString();
     }
 }
